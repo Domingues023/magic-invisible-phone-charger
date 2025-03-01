@@ -2,6 +2,9 @@
   "name": "magic-invisible-phone-charger",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,9 +12,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^14.0.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "next": "14.0.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
     "@stripe/stripe-js": "^2.2.0",
     "@stripe/react-stripe-js": "^2.4.0",
     "stripe": "^14.10.0"
