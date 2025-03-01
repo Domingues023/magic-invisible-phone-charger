@@ -8,7 +8,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export async function POST(req: Request) {
   try {
     const origin = req.headers.get('origin') || req.headers.get('referer') || 'http://localhost:3000';
-    const basePath = '/magic-invisible-phone-charger';
 
     // Create Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -27,8 +26,8 @@ export async function POST(req: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${origin}${basePath}/success`,
-      cancel_url: `${origin}${basePath}`,
+      success_url: `${origin}/success`,
+      cancel_url: `${origin}`,
     });
 
     return NextResponse.json({ sessionId: session.id });
