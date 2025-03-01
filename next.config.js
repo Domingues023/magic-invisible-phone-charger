@@ -4,8 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true, // Required for static export
   },
-  basePath: '/magic-invisible-phone-charger', // Replace with your repository name
-  assetPrefix: '/magic-invisible-phone-charger/',
+  basePath: process.env.NODE_ENV === 'production' ? '/magic-invisible-phone-charger' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/magic-invisible-phone-charger/' : '',
   trailingSlash: true,
   webpack: (config) => {
     config.resolve.alias = {
