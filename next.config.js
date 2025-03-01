@@ -5,6 +5,13 @@ const nextConfig = {
     unoptimized: true, // Required for static export
   },
   basePath: '/magic-invisible-phone-charger', // Replace with your repository name
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'tailwindcss': require.resolve('tailwindcss')
+    }
+    return config
+  }
 }
 
 module.exports = nextConfig 
