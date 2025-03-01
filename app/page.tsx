@@ -15,8 +15,8 @@ export default function Page() {
       const stripe = await stripePromise;
       if (!stripe) throw new Error('Stripe failed to initialize');
 
-      // Use relative URL with basePath for GitHub Pages
-      const response = await fetch(`${window.location.origin}/magic-invisible-phone-charger/api/create-checkout-session`, {
+      // Use Vercel deployment URL
+      const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
