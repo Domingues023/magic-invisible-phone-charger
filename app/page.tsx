@@ -1,14 +1,17 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 
 // Initialize Stripe with publishable key from environment variables
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function Page() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleBuyNow = async () => {
     try {
+      setIsLoading(true);
       const stripe = await stripePromise;
       if (!stripe) throw new Error('Stripe failed to initialize');
 
@@ -39,6 +42,7 @@ export default function Page() {
     } catch (error) {
       console.error('Error:', error);
       alert('Something went wrong. Please try again.');
+      setIsLoading(false);
     }
   };
 
@@ -53,9 +57,10 @@ export default function Page() {
           <div className="text-2xl font-bold text-purple-600">$39.99</div>
           <button
             onClick={handleBuyNow}
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-500 text-white px-6 py-3 rounded-lg hover:opacity-90 transition-opacity"
+            disabled={isLoading}
+            className="w-full bg-gradient-to-r from-purple-600 to-blue-500 text-white px-6 py-3 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
           >
-            Buy Now
+            {isLoading ? 'Processing...' : 'Buy Now'}
           </button>
         </div>
       </div>
