@@ -1,28 +1,41 @@
 'use client';
 
-import React, { useState } from 'react';
-import PaymentModal from './components/PaymentModal';
-import StripeProvider from './components/StripeProvider';
+import React from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+
+// Initialize Stripe
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function Page() {
-  const [showPayment, setShowPayment] = useState(false);
-  const [clientSecret, setClientSecret] = useState<string>();
-
   const handleBuyNow = async () => {
     try {
-      const response = await fetch('/api/create-payment-intent', {
+      const stripe = await stripePromise;
+      if (!stripe) throw new Error('Stripe failed to initialize');
+
+      // Use relative URL with basePath for GitHub Pages
+      const response = await fetch(`${window.location.origin}/magic-invisible-phone-charger/api/create-checkout-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          amount: 3999, // $39.99
-        }),
+        body: JSON.stringify({}),
       });
 
-      const data = await response.json();
-      setClientSecret(data.clientSecret);
-      setShowPayment(true);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create checkout session');
+      }
+
+      const { sessionId } = await response.json();
+
+      // Redirect to Stripe Checkout
+      const result = await stripe.redirectToCheckout({
+        sessionId,
+      });
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
     } catch (error) {
       console.error('Error:', error);
       alert('Something went wrong. Please try again.');
@@ -31,14 +44,6 @@ export default function Page() {
 
   return (
     <main>
-      {/* Payment Modal */}
-      {showPayment && clientSecret && (
-        <StripeProvider clientSecret={clientSecret}>
-          <PaymentModal onClose={() => setShowPayment(false)} />
-        </StripeProvider>
-      )}
-
-      {/* Main content */}
       <div className="min-h-screen bg-gradient-to-b from-purple-600 to-blue-500 flex flex-col items-center justify-center p-4">
         <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center space-y-6">
           <h1 className="text-3xl font-bold">Magic Invisible Phone Charger</h1>
