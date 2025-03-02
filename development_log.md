@@ -128,6 +128,6 @@ This is a modern e-commerce single-product website selling the Magic Invisible P
 
 ### Required Environment Variables
 ```env
-STRIPE_SECRET_KEY=your_stripe_secret_key_here
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key_here
+STRIPE_SECRET_KEY=sk_test_51QxhDfRuevrBvMeWHNhch5n4pC6ZAqoloflsueZ4JzkAO8zJA12zi42rxjfQaBk9zJxHpN82wnpxTGszbbj17VVy00MgNqlSHK
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_51QxhDfRuevrBvMeWIazXsaON7UzdTpQIjyfSPYsfR2YV0uqpDRFNqjDXQYPHL7qbgTiQfwKZKm1fRO7oXQuKpCC600fD6WpFSq
 ``` 
