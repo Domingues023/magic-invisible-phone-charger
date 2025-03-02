@@ -2,12 +2,15 @@
 
 import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import { useSession, signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function Home() {
   const [activeFeature, setActiveFeature] = useState(0);
+  const { data: session } = useSession();
 
   const features = [
     {
@@ -54,6 +57,40 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-black via-purple-900 to-black text-white">
+      {/* Navigation */}
+      <nav className="bg-black/50 backdrop-blur-sm border-b border-purple-500/20">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-gold-400 to-purple-500 text-transparent bg-clip-text">
+            Look Sexy Forever
+          </Link>
+          <div className="flex items-center space-x-4">
+            {session ? (
+              <>
+                <span className="text-purple-200">Welcome, {session.user?.name}</span>
+                <button
+                  onClick={() => signOut()}
+                  className="text-pink-400 hover:text-pink-300"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/signin" className="text-purple-200 hover:text-purple-100">
+                  Sign In
+                </Link>
+                <Link
+                  href="/auth/signup"
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-full hover:opacity-90"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-4 py-16">
         <div className="text-center mb-16 space-y-8">
