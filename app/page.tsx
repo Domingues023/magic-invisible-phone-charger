@@ -67,6 +67,12 @@ export default function Home() {
             {session ? (
               <>
                 <span className="text-purple-200">Welcome, {session.user?.name}</span>
+                <Link
+                  href="/profile"
+                  className="text-purple-200 hover:text-purple-100"
+                >
+                  Profile
+                </Link>
                 <button
                   onClick={() => signOut()}
                   className="text-pink-400 hover:text-pink-300"

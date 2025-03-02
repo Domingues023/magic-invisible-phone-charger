@@ -1,8 +1,10 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
+import { prisma } from "@/lib/prisma";
+import { AuthOptions } from "next-auth";
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -15,25 +17,24 @@ const handler = NextAuth({
           throw new Error('Please enter an email and password');
         }
 
-        // Here you would typically fetch the user from your database
-        // For now, we'll use a mock user
-        const mockUser = {
-          id: "1",
-          email: "test@example.com",
-          name: "Test User",
-          password: "$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj4J/fGPX.Ae" // hash for 'test123'
-        };
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email }
+        });
 
-        const isValid = await compare(credentials.password, mockUser.password);
+        if (!user) {
+          throw new Error('No user found with this email');
+        }
+
+        const isValid = await compare(credentials.password, user.password);
 
         if (!isValid) {
           throw new Error('Invalid password');
         }
 
         return {
-          id: mockUser.id,
-          email: mockUser.email,
-          name: mockUser.name
+          id: user.id,
+          email: user.email,
+          name: user.name
         };
       }
     })
@@ -52,6 +53,8 @@ const handler = NextAuth({
       return session;
     }
   }
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }; 
